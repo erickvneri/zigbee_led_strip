@@ -11,18 +11,18 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local st_switch = require "st.capabilities".switch
+local st_refresh = require "st.capabilities".refresh
+local zcl_on_off = require "st.zigbee.zcl.clusters".OnOff
+local zcl_level = require "st.zigbee.zcl.clusters".Level
+local zcl_color_control = require "st.zigbee.zcl.clusters".ColorControl
 
 
-local function on_off_handler(_, device, command, zb_rx)
-  local onoff = command.value and st_switch.switch.on() or st_switch.switch.off()
-
-  assert(pcall(
-    device.emit_event,
-    device,
-    onoff
-  ))
+local function st_refresh_handler(_, device)
+  device:send(zcl_on_off.attributes.OnOff:read(device))
+  device:send(zcl_level.attributes.CurrentLevel:read(device))
+  device:send(zcl_color_control.attributes.CurrentHue:read(device))
+  device:send(zcl_color_control.attributes.CurrentSaturation:read(device))
 end
 
 
-return on_off_handler
+return st_refresh_handler

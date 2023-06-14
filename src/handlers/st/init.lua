@@ -11,11 +11,13 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local switch_handler = require "handlers.st.switch_handler"
-local switch_level_handler = require "handlers.st.switch_level_handler"
+local st_switch_handler = require "handlers.st.st_switch_handler"
+local st_switch_level_handler = require "handlers.st.st_switch_level_handler"
+local st_refresh_handler = require "handlers.st.st_refresh_handler"
 
 
 return {
-  switch_handler = switch_handler,
-  switch_level_handler = switch_level_handler
+  st_switch_handler = st_switch_handler,
+  st_switch_level_handler = st_switch_level_handler,
+  st_refresh_handler = st_refresh_handler
 }

@@ -19,10 +19,10 @@ components:
         version: 1
       - id: switchLevel
         version: 1
-        config:
-          values:
-            - key: "level.value"
-              range: [1, 100]
+        #config:
+        #values:
+        #- key: "level.value"
+        #range: [1, 100]
       - id: colorTemperature
         version: 1
         config:
@@ -31,9 +31,56 @@ components:
               range: [2000, 6500]
       - id: colorControl
         version: 1
-      - id: firmwareUpdate
-        version: 1
       - id: refresh
         version: 1
     categories:
       - name: Light
+
+metadata:
+  deviceType: Light
+  ocfDeviceType: oic.d.light
+  deviceTypeId: Light
+
+preferences:
+  # user-defined option to allow transition
+  # of switch level states based on time (seconds)
+  - title: "Transition time (in seconds)"
+    name: transitionTime
+    description: "Time-lapse to change from the current level state to a new level"
+    required: false
+    preferenceType: number
+    definition:
+      # default as arg2 in Level.MoveToLevelWithOnOff cluster command
+      default: 0
+      minimum: 0
+      # maximum 16-bit integer (0xFFFF)
+      maximum: 65535
+
+  # user-defined option to allow fade
+  # light on switch actions (on/off)
+  #- title: "Transition on switch"
+  #name: transitionOnSwitch
+  #required: false
+  #preferenceType: boolean
+  #definition:
+  #default: false
+
+  # zigbee group for network-based
+  # command handling.
+  - title: "Group"
+    description: "Zigbee Group for broadcast Zigbee commands Note: this is an exclusive option for DIMMER MODE and make sure other devices are within same Group."
+    name: zigbeeGroup
+    preferenceType: integer
+    definition:
+      default: 0
+      minimum: 0
+      maximum: 65535
+
+  # allows to override the enrolled
+  # zigbee group after a new one is set
+  - title: "Override Group On Update"
+    description: 'With this option you can decide either to keep the associated Zigbee Group or remove device from the Group(s) on the "Group" has been redefined.'
+    name: overrideGroupOnUpdate
+    preferenceType: boolean
+    definition:
+      default: true

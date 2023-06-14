@@ -11,19 +11,28 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local zcl_on_off = require "st.zigbee.zcl.clusters".OnOff
-local st_switch = require "st.capabilities".switch
+local zcl_level = require "st.zigbee.zcl.clusters".Level
+local st_switch_level = require "st.capabilities".switchLevel
 
 
-local function switch_handler(_, device, command)
-  local zcl_attr = zcl_on_off.server.commands
-  local onoff = command.command == "on" and zcl_attr.On or zcl_attr.Off
+local function st_switch_level_handler(_, device, command)
+  local zcl_attr = zcl_level.server.commands
+  local lvl = command.args.level
 
-  -- Emit at zigbee network
+  local transition_time = device.preferences.transitionTime * 10
+  local zcl_lvl = math.floor(((lvl * 0xFF) / 0x64) + 0.5)
+
   assert(pcall(
-    device.send, device, onoff(device)
+    device.send,
+    device,
+    zcl_attr.MoveToLevelWithOnOff(device, zcl_lvl, transition_time)
+  ))
+  assert(pcall(
+    device.emit_event,
+    device,
+    st_switch_level.level({ value = lvl })
   ))
 end
 
 
-return switch_handler
+return st_switch_level_handler

@@ -23,17 +23,40 @@ local st_switch = require "st.capabilities".switch
 local st_switch_level = require "st.capabilities".switchLevel
 local st_color_control = require "st.capabilities".colorControl
 local st_color_temperature = require "st.capabilities".colorTemperature
+local st_refresh = require "st.capabilities".refresh
 
 -- Lifecycle handlers
 local do_configure = require "lifecycles".do_configure
 
 -- Zigbee handlers
-local on_off_handler = require "handlers.zcl".on_off_handler
+local zcl_onoff_handler = require "handlers.zcl".zcl_onoff_handler
+local zcl_level_handler = require "handlers.zcl".zcl_level_handler
 
 -- Capability handlers
-local switch_handler = require "handlers.st".switch_handler
-local switch_level_handler = require "handlers.st".switch_level_handler
+local st_switch_handler = require "handlers.st".st_switch_handler
+local st_switch_level_handler = require "handlers.st".st_switch_level_handler
+local st_refresh_handler = require "handlers.st".st_refresh_handler
 
+-- FIXME: This doesn't work well
+local function zcl_hue_saturation_handler(_, device, command, zb_rx)
+  print("zcl_saturation_handler")
+  for k,v in pairs(command) do
+    print(k,v)
+  end
+end
+
+local Uint16 = require "st.zigbee.data_types".Uint16
+local function st_color_temperature_handler(_, device, command)
+  local zcl_cmds = zcl_color_control.server.commands
+  local transition_time = device.preferences.transitionTime * 10
+  local color_temp = Uint16(command.args.temperature)
+
+  assert(pcall(
+    device.send,
+    device,
+    zcl_cmds.MoveToColorTemperature(device, color_temp, transition_time)
+  ))
+end
 
 local config = {
   supported_capabilities = {
@@ -52,19 +75,39 @@ local config = {
     attr = {
       -- OnOff / Switch
       [zcl_on_off.ID] = {
-        [zcl_on_off.attributes.OnOff.ID] = on_off_handler
+        [zcl_on_off.attributes.OnOff.ID] = zcl_onoff_handler
+      },
+      -- Level / Switch Level
+      [zcl_level.ID] = {
+        [zcl_level.attributes.CurrentLevel.ID] = zcl_level_handler
+      },
+      -- ColorControl / ColorControl.hue
+      [zcl_color_control.ID] = {
+        [zcl_color_control.attributes.CurrentHue.ID] = zcl_hue_saturation_handler
+      },
+      -- ColorControl / ColorControl.saturation
+      [zcl_color_control.ID] = {
+        [zcl_color_control.attributes.CurrentSaturation.ID] = zcl_hue_saturation_handler
       }
     }
   },
   capability_handlers = {
     -- Switch
     [st_switch.ID] = {
-      [st_switch.switch.on.NAME] = switch_handler,
-      [st_switch.switch.off.NAME] = switch_handler
+      [st_switch.switch.on.NAME] = st_switch_handler,
+      [st_switch.switch.off.NAME] = st_switch_handler
     },
     -- Switch Level
     [st_switch_level.ID] = {
-      [st_switch_level.commands.setLevel.NAME] = switch_level_handler
+      [st_switch_level.commands.setLevel.NAME] = st_switch_level_handler
+    },
+    -- Refresh
+    [st_refresh.ID] = {
+      [st_refresh.commands.refresh.NAME] = st_refresh_handler
+    },
+    -- Color Temperature
+    [st_color_temperature.ID] = {
+      [st_color_temperature.commands.setColorTemperature.NAME] = st_color_temperature_handler
     }
   }
 }

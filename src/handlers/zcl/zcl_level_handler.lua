@@ -11,11 +11,17 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local zcl_onoff_handler = require "handlers.zcl.zcl_onoff_handler"
-local zcl_level_handler = require "handlers.zcl.zcl_level_handler"
+local st_switch_level = require "st.capabilities".switchLevel
+
+local function zcl_level_handler(_, device, command, zb_rx)
+  local percent = math.floor(((command.value / 0xFF) * 0x64 ) + 0.5)
+
+  assert(pcall(
+    device.emit_event,
+    device,
+    st_switch_level.level({ value = percent })
+  ))
+end
 
 
-return {
-  zcl_onoff_handler = zcl_onoff_handler,
-  zcl_level_handler = zcl_level_handler
-}
+return zcl_level_handler

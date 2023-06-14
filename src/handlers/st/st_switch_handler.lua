@@ -11,11 +11,18 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local zcl_onoff_handler = require "handlers.zcl.zcl_onoff_handler"
-local zcl_level_handler = require "handlers.zcl.zcl_level_handler"
+local zcl_on_off = require "st.zigbee.zcl.clusters".OnOff
 
 
-return {
-  zcl_onoff_handler = zcl_onoff_handler,
-  zcl_level_handler = zcl_level_handler
-}
+local function st_switch_handler(_, device, command)
+  local zcl_attr = zcl_on_off.server.commands
+  local onoff = command.command == "on" and zcl_attr.On or zcl_attr.Off
+
+  -- Emit at zigbee network
+  assert(pcall(
+    device.send, device, onoff(device)
+  ))
+end
+
+
+return st_switch_handler

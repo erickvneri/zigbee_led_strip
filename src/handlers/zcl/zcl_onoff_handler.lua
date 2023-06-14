@@ -11,24 +11,18 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local zcl_level = require "st.zigbee.zcl.clusters".Level
-local st_switch_level = require "st.capabilities".switchLevel
+local st_switch = require "st.capabilities".switch
 
 
-local function switch_level_handler(_, device, command)
-  local zcl_attr = zcl_level.server.commands
-  local lvl = command.args.level
-
-  -- FIXME: SET UP TRANSITION TIME AT PREFERENCES
-  local transition_time = 5
-  local zcl_level = math.floor(((lvl * 0xFF) / 0x64) + 0.5)
+local function zcl_onoff_handler(_, device, command, zb_rx)
+  local onoff = command.value and st_switch.switch.on() or st_switch.switch.off()
 
   assert(pcall(
-    device.send,
+    device.emit_event,
     device,
-    zcl_attr.MoveToLevelWithOnOff(device, zcl_level, transition_time)
+    onoff
   ))
 end
 
 
-return switch_level_handler
+return zcl_onoff_handler
