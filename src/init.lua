@@ -31,32 +31,31 @@ local do_configure = require "lifecycles".do_configure
 -- Zigbee handlers
 local zcl_onoff_handler = require "handlers.zcl".zcl_onoff_handler
 local zcl_level_handler = require "handlers.zcl".zcl_level_handler
+local zcl_hue_saturation_handler = require "handlers.zcl".zcl_hue_saturation_handler
 
 -- Capability handlers
 local st_switch_handler = require "handlers.st".st_switch_handler
 local st_switch_level_handler = require "handlers.st".st_switch_level_handler
 local st_refresh_handler = require "handlers.st".st_refresh_handler
+local st_color_control_handler = require "handlers.st".st_color_control_handler
 
--- FIXME: This doesn't work well
-local function zcl_hue_saturation_handler(_, device, command, zb_rx)
-  print("zcl_saturation_handler")
-  for k,v in pairs(command) do
-    print(k,v)
-  end
-end
 
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
 local Uint16 = require "st.zigbee.data_types".Uint16
 local function st_color_temperature_handler(_, device, command)
   local zcl_cmds = zcl_color_control.server.commands
   local transition_time = device.preferences.transitionTime * 10
   local color_temp = Uint16(command.args.temperature)
 
-  assert(pcall(
-    device.send,
-    device,
-    zcl_cmds.MoveToColorTemperature(device, color_temp, transition_time)
-  ))
+  device:send(zcl_cmds.MoveToColorTemperature(device, color_temp, transition_time))
 end
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
+-- TODO: REFINEMENT PENDING
 
 local config = {
   supported_capabilities = {
@@ -105,9 +104,15 @@ local config = {
     [st_refresh.ID] = {
       [st_refresh.commands.refresh.NAME] = st_refresh_handler
     },
+    -- TODO: REFINEMENT PENDING
     -- Color Temperature
     [st_color_temperature.ID] = {
       [st_color_temperature.commands.setColorTemperature.NAME] = st_color_temperature_handler
+    },
+    -- TODO: REFINEMENT PENDING
+    -- Color Control
+    [st_color_control.ID] = {
+      [st_color_control.commands.setColor.NAME] = st_color_control_handler
     }
   }
 }

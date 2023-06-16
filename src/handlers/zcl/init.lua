@@ -13,9 +13,11 @@
 -- limitations under the License.
 local zcl_onoff_handler = require "handlers.zcl.zcl_onoff_handler"
 local zcl_level_handler = require "handlers.zcl.zcl_level_handler"
+local zcl_hue_saturation_handler = require "handlers.zcl.zcl_hue_saturation_handler"
 
 
 return {
   zcl_onoff_handler = zcl_onoff_handler,
-  zcl_level_handler = zcl_level_handler
+  zcl_level_handler = zcl_level_handler,
+  zcl_hue_saturation_handler = zcl_hue_saturation_handler
 }

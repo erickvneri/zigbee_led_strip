@@ -31,12 +31,8 @@ local function do_configure(driver, device)
   ))
 
   -- Configure reporting
-  device:send(
-    zcl_on_off.attributes.OnOff:configure_reporting(device, 3600, 21600, 1)
-  )
-  device:send(
-    zcl_level.attributes.CurrentLevel:configure_reporting(device, 3600, 21600, 1)
-  )
+  device:send(zcl_on_off.attributes.OnOff:configure_reporting(device, 3600, 21600, 1))
+  device:send(zcl_level.attributes.CurrentLevel:configure_reporting(device, 3600, 21600, 1))
 
   -- Emit Zigbee event
   device:send(zcl_on_off.attributes.OnOff:read(device))

@@ -11,15 +11,23 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local st_switch_handler = require "handlers.st.st_switch_handler"
-local st_switch_level_handler = require "handlers.st.st_switch_level_handler"
-local st_refresh_handler = require "handlers.st.st_refresh_handler"
-local st_color_control_handler = require "handlers.st.st_color_control_handler"
+local st_color_control = require "st.capabilities".colorControl
 
 
-return {
-  st_switch_handler = st_switch_handler,
-  st_switch_level_handler = st_switch_level_handler,
-  st_refresh_handler = st_refresh_handler,
-  st_color_control_handler = st_color_control_handler
-}
+local function zcl_hue_saturation_handler(_, device, command, zb_rx)
+  local attr = command.field_name
+  local hue = 0
+  local saturation = 0
+
+  if attr == "CurrentSaturation" then
+    saturation = command.value
+  elseif attr == "CurrentHue" then
+    hue = command.value
+  end
+
+  device:emit_event(st_color_control.hue(hue))
+  device:emit_event(st_color_control.saturation(saturation))
+end
+
+
+return zcl_hue_saturation_handler

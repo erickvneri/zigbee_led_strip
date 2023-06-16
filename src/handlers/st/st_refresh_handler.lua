@@ -11,7 +11,6 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
-local st_refresh = require "st.capabilities".refresh
 local zcl_on_off = require "st.zigbee.zcl.clusters".OnOff
 local zcl_level = require "st.zigbee.zcl.clusters".Level
 local zcl_color_control = require "st.zigbee.zcl.clusters".ColorControl
