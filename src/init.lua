@@ -44,12 +44,13 @@ local st_color_control_handler = require "handlers.st".st_color_control_handler
 -- TODO: REFINEMENT PENDING
 -- TODO: REFINEMENT PENDING
 -- TODO: REFINEMENT PENDING
-local Uint16 = require "st.zigbee.data_types".Uint16
+local utils = require "st.utils"
 local function st_color_temperature_handler(_, device, command)
   local zcl_cmds = zcl_color_control.server.commands
   local transition_time = device.preferences.transitionTime * 10
-  local color_temp = Uint16(command.args.temperature)
+  local color_temp = utils.round(1000000 / command.args.temperature)
 
+  print(command.args.temperature)
   device:send(zcl_cmds.MoveToColorTemperature(device, color_temp, transition_time))
 end
 -- TODO: REFINEMENT PENDING

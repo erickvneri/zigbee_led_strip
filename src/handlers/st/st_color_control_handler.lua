@@ -18,8 +18,8 @@ local zcl_color_control = require "st.zigbee.zcl.clusters".ColorControl
 local function st_color_control_handler(_, device, command)
   local st_hue = command.args.color.hue
   local st_saturation = command.args.color.saturation
-  local zcl_hue = math.floor((st_hue * 0xFF) / 100)
-  local zcl_saturation = math.floor((st_saturation * 0xFF) / 100)
+  local zcl_hue = math.floor((st_hue * 0xFE) / 100 + 0.5)
+  local zcl_saturation = math.floor((st_saturation * 0xFE) / 100 + 0.5)
   local transition_time = device.preferences.transitionTime * 10
   local zcl_cmd = zcl_color_control.server.commands
 
