@@ -12,16 +12,20 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 local zcl_on_off = require "st.zigbee.zcl.clusters".OnOff
+local st_switch = require "st.capabilities".switch
 
 
 local function st_switch_handler(_, device, command)
   local zcl_attr = zcl_on_off.server.commands
   local onoff = command.command == "on" and zcl_attr.On or zcl_attr.Off
+  local st_onoff = command.command == "on" and st_switch.switch.on() or st_switch.switch.off()
 
   -- Emit at zigbee network
   assert(pcall(
     device.send, device, onoff(device)
   ))
+
+  device:emit_event(st_onoff)
 end
 
 

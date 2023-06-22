@@ -110,7 +110,6 @@ local config = {
     [st_color_temperature.ID] = {
       [st_color_temperature.commands.setColorTemperature.NAME] = st_color_temperature_handler
     },
-    -- TODO: REFINEMENT PENDING
     -- Color Control
     [st_color_control.ID] = {
       [st_color_control.commands.setColor.NAME] = st_color_control_handler

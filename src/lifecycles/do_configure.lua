@@ -24,15 +24,12 @@ local function do_configure(driver, device)
   device:refresh()
 
   -- Bind OnOff cluster
-  device:send(device_mgmt.build_bind_request(
-    device,
-    zcl_on_off.ID,
-    driver.environment_info.hub_zigbee_eui
-  ))
+  local hub_eui = driver.environment_info.hub_zigbee_eui
+  device:send(device_mgmt.build_bind_request(device, zcl_on_off.ID, hub_eui))
 
   -- Configure reporting
-  device:send(zcl_on_off.attributes.OnOff:configure_reporting(device, 3600, 21600, 1))
-  device:send(zcl_level.attributes.CurrentLevel:configure_reporting(device, 3600, 21600, 1))
+  device:send(zcl_on_off.attributes.OnOff:configure_reporting(device, 0, 300, 1))
+  device:send(zcl_level.attributes.CurrentLevel:configure_reporting(device, 0, 300, 1))
 
   -- Emit Zigbee event
   device:send(zcl_on_off.attributes.OnOff:read(device))
