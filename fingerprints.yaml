@@ -15,7 +15,7 @@ zigbeeManufacturer:
   # model: YSR-mini-Z-01
   # marketplace: https://es.aliexpress.com/item/1005005248970368.html?spm=a2g0o.order_list.order_list_main.4.6fed194dOqlDUd&gatewayAdapt=glo2esp
   - id: "eWeLight/ZB-CL01"
-    deviceLabel: "RGBW Led Strip"
+    deviceLabel: "Smart Light Strip Controller"
     manufacturer: eWeLight
     model: ZB-CL01
     deviceProfileName: default

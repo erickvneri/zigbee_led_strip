@@ -40,24 +40,6 @@ local st_refresh_handler = require "handlers.st".st_refresh_handler
 local st_color_control_handler = require "handlers.st".st_color_control_handler
 
 
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
-local utils = require "st.utils"
-local function st_color_temperature_handler(_, device, command)
-  local zcl_cmds = zcl_color_control.server.commands
-  local transition_time = device.preferences.transitionTime * 10
-  local color_temp = utils.round(1000000 / command.args.temperature)
-
-  print(command.args.temperature)
-  device:send(zcl_cmds.MoveToColorTemperature(device, color_temp, transition_time))
-end
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
--- TODO: REFINEMENT PENDING
-
 local config = {
   supported_capabilities = {
     st_switch,
@@ -67,7 +49,6 @@ local config = {
 
   },
   lifecycle_handlers = {
-    init = nil,
     added = nil,
     doConfigure = do_configure
   },
@@ -105,11 +86,6 @@ local config = {
     [st_refresh.ID] = {
       [st_refresh.commands.refresh.NAME] = st_refresh_handler
     },
-    -- TODO: REFINEMENT PENDING
-    -- Color Temperature
-    [st_color_temperature.ID] = {
-      [st_color_temperature.commands.setColorTemperature.NAME] = st_color_temperature_handler
-    },
     -- Color Control
     [st_color_control.ID] = {
       [st_color_control.commands.setColor.NAME] = st_color_control_handler
@@ -118,5 +94,5 @@ local config = {
 }
 
 
-local driver = ZigbeeDriver("zigbee-led-strip-v0.0.1", config)
+local driver = ZigbeeDriver("zigbee-led-strip-v1.0.0", config)
 driver:run()

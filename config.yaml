@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: "zigbee-led-strip-v0.0.1"
-packageKey: "zigbee-led-strip-v0.0.1"
+name: "zigbee-led-strip-v1.0.0"
+packageKey: "zigbee-led-strip-v1.0.0"
 permissions:
   zigbee: {}
